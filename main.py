@@ -7,62 +7,64 @@ import os
 import openpyxl
 from PIL import ImageTk as img
 
+
 # Класс создоющий родительский объект
 class Main(object):
     def __init__(self):
-         """Класс Main - основное окно программы
+        """Класс Main - основное окно программы
         В методе __init__ происходит
         инициализация переменных и виджетов."""
+        super().__init__()
 
-         # Создание экземпляра главного окна
-         self.root = ttk.Window(themename="my_them")
-         self.root.geometry("1920x1080")
-         self.root.title("Физра")
+        # Создание экземпляра главного окна
+        self.root = ttk.Window(themename="my_them")
+        self.root.geometry("1920x1080")
+        self.root.title("Физра")
 
-         # Инициализация переменных
-         self.ope = openpyxl
-         self.name = None
-         self.pullup = None
-         self.press = None
-         self.jump = None
-         self.isnumber_pullup = None
-         self.isnumber_press = None
-         self.isnumber_jump = None
-         self.name_Girls = None
-         self.pullup_Girls = None
-         self.press_Girls = None
-         self.jump_Girls = None
-         self.bulls = None
-         self.bulls_Girls = None
-         self.point = None
-         # Создание экземпляра работы с Excel
-         self.work = self.ope.Workbook()
-         self.next_row = 2
-         self.next_row_Girls = 2
-         self.file_path = ""
-         self.file_path_Girls = ""
-         self.sys = os
-         self.imag = img
-         self.sheet = self.work.active
+        # Инициализация переменных
+        self.ope = openpyxl
+        self.name = None
+        self.pullup = None
+        self.press = None
+        self.jump = None
+        self.isnumber_pullup = None
+        self.isnumber_press = None
+        self.isnumber_jump = None
+        self.name_Girls = None
+        self.pullup_Girls = None
+        self.press_Girls = None
+        self.jump_Girls = None
+        self.bulls = None
+        self.bulls_Girls = None
+        self.point = None
+        self.point_man = None
+        # Создание экземпляра работы с Excel
+        self.work = self.ope.Workbook()
+        self.next_row = 2
+        self.next_row_Girls = 2
+        self.file_path = ""
+        self.file_path_Girls = ""
+        self.sys = os
+        self.imag = img
+        self.sheet = self.work.active
+        # Создание виджетов
+        self.textlabelMan()
+        self.textlabelGirls()
+        self.inputUserMan()
+        self.inputUserGirls()
+        self.button()
+        self.button_Girls()
+        self.ImagesTabel()
 
-         # Создание виджетов
-         self.textlabelMan()
-         self.textlabelGirls()
-         self.inputUserMan()
-         self.inputUserGirls()
-         self.button()
-         self.button_Girls()
-         self.ImagesTabel()
-
-         # Запуск главного цикла обработки событий
-         self.root.mainloop()
+        # Запуск главного цикла обработки событий
+        self.root.mainloop()
 
     # Функция расположения текстовых виджетов 'Парни'
     def textlabelMan(self):
         # Создание текстовых меток
         self.txtMan = ttk.Label(text="Парни:", font=("Arial", 12))
-        self.txtMan.grid(row=0, column=0, sticky="ew") # Лайбел который сообшает пользователю что под ним вводятся результаты парней
-
+        self.txtMan.grid(row=0, column=0,
+                         sticky="ew")  # Лайбел который сообшает пользователю что под ним вводятся результаты парней
 
         self.txt = ttk.Label(text="Программа предназначена для подсчёта\n"
                                   "баллов за нормативы.(проходной бал от 39 до 75)",
@@ -242,7 +244,7 @@ class Main(object):
 
             return self.txt3
 
-        self.bulls = [] # кортеж  или массив
+        self.bulls = []  # кортеж  или массив
         for a, b, c in zip(self.isnumber_pullup, self.isnumber_press, self.isnumber_jump):
             self.bulls.append(a + b + c)
 
@@ -251,7 +253,6 @@ class Main(object):
             self.txt2 = ttk.Label(text=f'Результат: {self.name}- абитуриент набрал {self.bulls} баллов - прошёл!',
                                   font=("Intro", 10))
             self.txt2.grid(row=7, column=0, sticky="w", pady=20)
-
 
         self.ballus_Man = ttk.Label(text=f"{self.isnumber_pullup}", font=("Intro", 10))
         self.ballus_Man.place(x=420, y=130, anchor="w")
@@ -262,6 +263,10 @@ class Main(object):
         self.ballus_Man2 = ttk.Label(text=f"{self.isnumber_jump}", font=("Intro", 10))
         self.ballus_Man2.place(x=420, y=265, anchor="w")
 
+        self.point_man = ttk.StringVar()
+        self.bulls = self.ListType(self.bulls)
+        self.point_man.set("".join(self.bulls))
+
     # Метод отвечаюший за кнопку с вызовом функции counting()
     def button(self):
         self.bnt = ttk.Button(text="Result", bootstyle=(INFO, OUTLINE), width=18, command=self.counting_tabelMan)
@@ -270,7 +275,6 @@ class Main(object):
         self.bnt_savemenu = ttk.Button(text="Save Man", bootstyle=(INFO, OUTLINE), width=10,
                                        command=self.SaveResultApplicants)
         self.bnt_savemenu.place(x=20, y=600)
-
 
     def ImagesTabel(self):
         self.imahes_file = ttk.Image.open("Tabel.png")
@@ -294,7 +298,7 @@ class Main(object):
         # self.value5 = self.isnumber_press if self.isnumber_press else ""
         self.value6 = self.jump if self.jump else ""
         # self.value7 = self.isnumber_jump if self.isnumber_jump else ""
-        # self.value8 = self.bulls if self.bulls else ""
+        self.value8 = self.bulls if self.bulls else ""
 
         # Парни сохранение
         self.sheet.cell(row=self.next_row, column=1).value = self.value1
@@ -304,12 +308,12 @@ class Main(object):
         # self.sheet['E1'] = self.value5
         self.sheet.cell(row=self.next_row, column=4).value = self.value6
         # self.sheet['G1'] = self.value7
-        # self.sheet.cell(row=self.next_row, column=5).value = self.value8
+        for self.next_row, self.value8 in enumerate(self.bulls, start=self.next_row):
+            self.sheet.cell(row=self.next_row, column=5).value = self.value8
 
         self.next_row += 1
 
         self.work.save(self.file_path)
-
 
     # Функция расположения текстовых виджетов 'Девушки'
     def textlabelGirls(self):
@@ -493,7 +497,6 @@ class Main(object):
             self.txt3_Girls.grid(row=9, column=0, sticky="w", pady=20)
             return self.txt3_Girls
 
-
         self.bulls_Girls = []
         for a, b, c in zip(self.isnumber_pullup_Girls, self.isnumber_press_Girls, self.isnumber_jump_Girls):
             self.bulls_Girls.append(a + b + c)
@@ -505,9 +508,6 @@ class Main(object):
                 font=("Intro", 10))
             self.txt2_Girsl.place(x=600, y=390)
 
-        self.point = (''.join(map(str, self.bulls_Girls)))
-        self.point = ttk.StringVar()
-        self.point.get()
 
         self.ballus_Girls = ttk.Label(text=f"{self.isnumber_pullup_Girls}", font=("Intro", 10))
         self.ballus_Girls.place(x=1170, y=130, anchor="w")
@@ -517,6 +517,10 @@ class Main(object):
 
         self.ballus_Girls2 = ttk.Label(text=f"{self.isnumber_jump_Girls}", font=("Intro", 10))
         self.ballus_Girls2.place(x=1170, y=265, anchor="w")
+
+        self.point = ttk.StringVar()
+        self.bulls_Girls = self.ListType(self.bulls_Girls)
+        self.point.set("".join(self.bulls_Girls))
 
     # Функция отвечающая за кнопку с вызовом функции counting()
     def button_Girls(self):
@@ -528,9 +532,16 @@ class Main(object):
                                              command=self.SaveResultApplicationGirls)
         self.bnt_savemenu_Girls.place(x=150, y=600)
 
+    def ListType(self, int_list=None):
+        self.str_list=[str(i) for i in int_list]
+        return self.str_list
+
     def SaveResultApplicationGirls(self):
         if not self.file_path_Girls:
             self.file_path_Girls = filedialog.asksaveasfilename(defaultextension="dataGirls.xlsx")
+
+        self.point.get()
+
 
         # Девушки
         self.value1_Girls = self.name_Girls if self.name_Girls else ""
@@ -540,17 +551,18 @@ class Main(object):
         # self.value5_Girls = self.isnumber_press if self.isnumber_press else ""
         self.value6_Girls = self.jump_Girls if self.jump_Girls else ""
         # self.value7_Girls = self.isnumber_jump if self.isnumber_jump else ""
-        # self.value8_Girls = self.point if self.point else ""
+        self.value8_Girls = self.point if self.point else ""
 
         # Девушки сохранение
-        self.sheet.cell(row=2, column=1).value = self.value1_Girls
+        self.sheet.cell(row=self.next_row_Girls, column=1).value = self.value1_Girls
         self.sheet.cell(row=self.next_row_Girls, column=2).value = self.value2_Girls
         # self.sheet['C1'] = self.value3
         self.sheet.cell(row=self.next_row_Girls, column=3).value = self.value4_Girls
         # self.sheet['E1'] = self.value5
         self.sheet.cell(row=self.next_row_Girls, column=4).value = self.value6_Girls
         # self.sheet['G1'] = self.value7
-        # self.sheet.cell(row=self.next_row, column=5).value = self.value8_Girls
+        for self.next_row_Girls, self.value8_Girls in enumerate(self.bulls_Girls, start=self.next_row_Girls):
+            self.sheet.cell(row=self.next_row_Girls, column=5).value = self.value8_Girls
 
         self.next_row_Girls += 1
 
